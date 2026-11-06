@@ -14,8 +14,12 @@
         <button type="submit">Add</button>
       </form>
       <!-- error handling message : CSS added:: .input-error & #error-message -->
-      <p id="error-message">Please enter a todo item</p>
-      <label for="status-filter">Show tasks</label>
+<p id="error-message">Please enter a todo item</p>
+<div>
+  <label for="todo-search">Search tasks</label>
+  <input id="todo-search" type="search" />
+</div>
+<label for="status-filter">Show tasks</label>
       <select id="status-filter">
         <option value="all">All</option>
         <option value="active">Active</option>

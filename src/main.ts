@@ -14,7 +14,7 @@
 
 // 1 Import the CSS file: This ensures that the styles are applied to the HTML elements.
 import './style.css';
-import { filterTodos, type FilterStatus } from './todo-filters';
+import { filterTodos, searchTodos, type FilterStatus } from './todo-filters';
 
 // Step 2: Define the Todo interface
 // Define the Todo interface: This interface defines the structure of a todo item.
@@ -34,6 +34,7 @@ const todoInput = document.getElementById('todo-input') as HTMLInputElement; // 
 const todoForm = document.querySelector('.todo-form') as HTMLFormElement;    // exist in HTML file
 const todoList = document.getElementById('todo-list') as HTMLUListElement;   // exist in HTML file
 const statusFilter = document.querySelector('#status-filter') as HTMLSelectElement;
+const searchInput = document.querySelector('#todo-search') as HTMLInputElement;
 
 
 
@@ -58,7 +59,8 @@ export const addTodo = (text: string): void => {
 const renderTodos = (): void => {
   todoList.innerHTML = '';
 
-const visibleTodos = filterTodos(todos, statusFilter.value as FilterStatus);
+const matchingStatus = filterTodos(todos, statusFilter.value as FilterStatus);
+const visibleTodos = searchTodos(matchingStatus, searchInput.value);
 visibleTodos.forEach(todo => {
     const li = document.createElement('li');
     li.className = 'todo-item';
@@ -92,6 +94,7 @@ visibleTodos.forEach(todo => {
 // Step 6.1: Function to render the list of todos
 // Initial render
 statusFilter.addEventListener('change', renderTodos);
+searchInput.addEventListener('input', renderTodos);
 renderTodos(); // Call the renderTodos function to display the initial list of todos : Should be at the end of the code to ensure that the function is defined before it is called.
 // The initial render is important to display the list of todos when the page is first loaded. Without it, the list would be empty until a new todo is added.
 // Move it when code is complete ( refactoring ) 
