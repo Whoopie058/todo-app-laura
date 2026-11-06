@@ -53,24 +53,36 @@ export const addTodo = (text: string): void => {
 
 // Step 6: Function to render the list of todos
 // Function to render the list of todos: This function updates the DOM to display the current list of todos.
-const renderTodos = (): void => { // void because no return - what we are doing is updating the DOM
-  // Clear the current list
+const renderTodos = (): void => {
   todoList.innerHTML = '';
 
-  // Iterate over the todos array and create list items for each todo
-  todos.forEach(todo => { // In this specific case, .forEach is more suitable because we are directly modifying the DOM for each todo item.
+  todos.forEach(todo => {
     const li = document.createElement('li');
-    li.className = 'todo-item'; // Add a class to the list item
-    // Use template literals to create the HTML content for each list item
+    li.className = 'todo-item';
+
     li.innerHTML = `
-      <span>${todo.text}</span>
-      <button>Remove</button>
-         <button id="editBtn">Edit</button>
+      <span></span>
+      <button type="button">Remove</button>
+      <button type="button" id="editBtn">Edit</button>
     `;
-    // addRemoveButtonListener is further down in the code. We have onclick in the function instead of template literals. More safe to use addEventListener.
-    addRemoveButtonListener(li, todo.id); // Add event listener to the remove button. li is the parent element, and todo.id is the ID of the todo. 
-    addEditButtonListener(li, todo.id); // Add event listener to the remove button. li is the parent element, and todo.id is the ID of the todo. 
-    todoList.appendChild(li); // Append the list item to the ul element
+
+    const label = li.querySelector('span')!;
+    label.textContent = todo.text;
+    label.classList.toggle('is-completed', todo.completed);
+
+    const toggleButton = document.createElement('button');
+    toggleButton.type = 'button';
+    toggleButton.textContent = todo.completed ? 'Mark active' : 'Mark done';
+
+    toggleButton.addEventListener('click', () => {
+      todo.completed = !todo.completed;
+      renderTodos();
+    });
+
+    li.append(toggleButton);
+    addRemoveButtonListener(li, todo.id);
+    addEditButtonListener(li, todo.id);
+    todoList.appendChild(li);
   });
 };
 
