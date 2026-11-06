@@ -6,6 +6,7 @@ export interface Todo {
   id: number;
   text: string;
   completed: boolean;
+  tags?: string[];
 }
 
 // Step 3: Initialize an empty array to store todos
@@ -18,13 +19,15 @@ const todoList = document.getElementById('todo-list') as HTMLUListElement;
 const statusFilter = document.querySelector('#status-filter') as HTMLSelectElement;
 const searchInput = document.querySelector('#todo-search') as HTMLInputElement;
 const clearTodosButton = document.querySelector('#clear-todos') as HTMLButtonElement;
+const tagsInput = document.getElementById('todo-tags') as HTMLInputElement;
 
 // Step 5: Add a new todo.
-export const addTodo = (text: string): void => {
+export const addTodo = (text: string, tags: string[] = []): void => {
   const newTodo: Todo = {
     id: Date.now(),
     text,
     completed: false,
+    tags,
   };
 
   todos.push(newTodo);
@@ -51,6 +54,11 @@ visibleTodos.forEach(todo => {
     const label = li.querySelector('span')!;
     label.textContent = todo.text;
     label.classList.toggle('is-completed', todo.completed);
+    if (todo.tags?.length) {
+      const tagLabel = document.createElement('small');
+      tagLabel.textContent = `Tags: ${todo.tags.join(', ')}`;
+      label.after(tagLabel);
+    }
 
     const toggleButton = document.createElement('button');
     toggleButton.type = 'button';
@@ -89,8 +97,14 @@ todoForm.addEventListener('submit', (event) => {
 
   todoInput.classList.remove('input-error');
   errorMessage.style.display = 'none';
-  addTodo(text);
-  todoInput.value = '';
+const tags = tagsInput.value
+  .split(',')
+  .map((tag) => tag.trim())
+  .filter((tag) => tag !== '');
+
+addTodo(text, tags);
+todoInput.value = '';
+tagsInput.value = '';
 });
 
 
@@ -150,6 +164,13 @@ const initializeColorPicker = (): void => {
 document.addEventListener('DOMContentLoaded', initializeColorPicker);
 
 
+// Dark Mode Toggle: Add a button to toggle between light and dark modes.
+// Toggle dark mode when the button is clicked.
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+darkModeToggle?.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+});
 
 
 //Optional features list: 
@@ -189,10 +210,6 @@ document.addEventListener('DOMContentLoaded', initializeColorPicker);
 // Option 10: Add a progress bar to show the percentage of completed todos.
 // Update the progress bar as todos are marked as completed or incomplete.
 // Dark Mode Toggle:
-
-// Option 11: Add a button to toggle between light and dark modes.
-// Change the app's theme based on the selected mode.
-// Export/Import Todos:
 
 // Option 12: Add buttons to export the list of todos to a JSON file.
 // Add functionality to import todos from a JSON file.
