@@ -15,6 +15,12 @@
       </form>
       <!-- error handling message : CSS added:: .input-error & #error-message -->
       <p id="error-message">Please enter a todo item</p>
+      <label for="status-filter">Show tasks</label>
+      <select id="status-filter">
+        <option value="all">All</option>
+        <option value="active">Active</option>
+        <option value="completed">Completed</option>
+      </select>
       <ul class="todo-list" id="todo-list"></ul>
 
       <input type="color" id="colorPicker" />
