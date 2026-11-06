@@ -12,6 +12,14 @@
       <form class="todo-form">
         <input type="text" id="todo-input" placeholder="Add a new todo" />
         <button type="submit">Add</button>
+
+        <div class="todo-tags-field">
+          <label for="todo-tags">Tags (optional)</label>
+          <input type="text" id="todo-tags" placeholder="e.g. school, home">
+        </div>
+
+        <label for="todo-tags">Tags (optional)</label>
+        <input type="text" id="todo-tags" placeholder="e.g. school, home">
       </form>
       <!-- error handling message : CSS added:: .input-error & #error-message -->
 <p id="error-message">Please enter a todo item</p>
@@ -30,6 +38,8 @@
       <button type="button" id="clear-todos">Clear all tasks</button>
 
       <input type="color" id="colorPicker" />
+      <button type="button" id="dark-mode-toggle">Toggle Dark Mode</button>
+
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
