@@ -15,6 +15,7 @@
 // 1 Import the CSS file: This ensures that the styles are applied to the HTML elements.
 import './style.css';
 import { filterTodos, searchTodos, type FilterStatus } from './todo-filters';
+import { loadTodos, saveTodos } from './todo-storage';
 
 // Step 2: Define the Todo interface
 // Define the Todo interface: This interface defines the structure of a todo item.
@@ -26,7 +27,7 @@ export interface Todo {
 
 // Step 3: Initialize an empty array to store todos
 // Initialize an empty array: This array will store the list of todos.
-export let todos: Todo[] = [];
+export let todos: Todo[] = loadTodos();
 
 // Step 4: Get references to the HTML elements
 // Get references to the HTML elements: These references will be used to interact with the DOM
@@ -35,6 +36,7 @@ const todoForm = document.querySelector('.todo-form') as HTMLFormElement;    // 
 const todoList = document.getElementById('todo-list') as HTMLUListElement;   // exist in HTML file
 const statusFilter = document.querySelector('#status-filter') as HTMLSelectElement;
 const searchInput = document.querySelector('#todo-search') as HTMLInputElement;
+const clearTodosButton = document.querySelector('#clear-todos') as HTMLButtonElement;
 
 
 
@@ -49,9 +51,9 @@ export const addTodo = (text: string): void => {
     text: text,
     completed: false,
   };
-  todos.push(newTodo);
-  console.log("Todo added: ", todos); // Log the updated list of todos to the console
-  renderTodos(); // Render the updated list of todos => create the function next
+todos.push(newTodo);
+console.log("Todo added: ", todos);
+saveAndRenderTodos();
 };
 
 // Step 6: Function to render the list of todos
@@ -81,7 +83,7 @@ visibleTodos.forEach(todo => {
 
     toggleButton.addEventListener('click', () => {
       todo.completed = !todo.completed;
-      renderTodos();
+      saveAndRenderTodos();
     });
 
     li.append(toggleButton);
@@ -95,7 +97,7 @@ visibleTodos.forEach(todo => {
 // Initial render
 statusFilter.addEventListener('change', renderTodos);
 searchInput.addEventListener('input', renderTodos);
-renderTodos(); // Call the renderTodos function to display the initial list of todos : Should be at the end of the code to ensure that the function is defined before it is called.
+// Call the renderTodos function to display the initial list of todos : Should be at the end of the code to ensure that the function is defined before it is called.
 // The initial render is important to display the list of todos when the page is first loaded. Without it, the list would be empty until a new todo is added.
 // Move it when code is complete ( refactoring ) 
 
@@ -147,8 +149,8 @@ const addRemoveButtonListener = (li: HTMLLIElement, id: number): void => {
 // Function to remove a todo by ID: This function removes a todo from the array based on its ID.
 export const removeTodo = (id: number): void => {
   todos = todos.filter(todo => todo.id !== id);
-  renderTodos(); // Re-render the updated list of todos
-}; 
+  saveAndRenderTodos();
+};
 
 
 // Edit event listener - make button and add button to each todo
@@ -164,8 +166,8 @@ const editTodo = (id:number) => {
   if (todo) {
     const text = prompt('Edit todo', todo.text)
     if (text) {
-      todo.text = text
-      renderTodos()
+  todo.text = text;
+  saveAndRenderTodos();
     }
   }
 }
@@ -281,3 +283,16 @@ document.addEventListener('DOMContentLoaded', () => {
 // Add error handling for user input validation. Show red text or border for invalid input.
 // Display error messages for invalid input.
 
+function saveAndRenderTodos(): void {
+  saveTodos(todos);
+  renderTodos();
+}
+
+clearTodosButton.addEventListener('click', () => {
+  if (todos.length === 0 || !window.confirm('Clear all tasks?')) return;
+
+  todos = [];
+  saveAndRenderTodos();
+});
+
+renderTodos();
